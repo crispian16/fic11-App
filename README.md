@@ -1,4 +1,4 @@
-# fic11_starter_pos
+# fic11_mobile_pos
 
 A new Flutter project.
 
