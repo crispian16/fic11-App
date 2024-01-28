@@ -1,8 +1,11 @@
 import 'package:fic11_starter_pos/core/extensions/build_context_ext.dart';
 import 'package:fic11_starter_pos/core/extensions/date_time_ext.dart';
 import 'package:fic11_starter_pos/core/extensions/int_ext.dart';
+import 'package:fic11_starter_pos/presentation/home/bloc/checkout/checkout_bloc.dart';
 import 'package:fic11_starter_pos/presentation/home/pages/dashboard_page.dart';
+import 'package:fic11_starter_pos/presentation/order/bloc/bloc/order_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/buttons.dart';
@@ -29,56 +32,68 @@ class PaymentSuccessDialog extends StatelessWidget {
           ),
         ],
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SpaceHeight(12.0),
-          const _LabelValue(
-            label: 'METODE PEMBAYARAN',
-            value: 'Tunai',
-          ),
-          const Divider(height: 36.0),
-          _LabelValue(
-            label: 'TOTAL PEMBELIAN',
-            value: 123000.currencyFormatRp,
-          ),
-          const Divider(height: 36.0),
-          _LabelValue(
-            label: 'NOMINAL BAYAR',
-            value: 123000.currencyFormatRp,
-          ),
-          const Divider(height: 36.0),
-          _LabelValue(
-            label: 'WAKTU PEMBAYARAN',
-            value: DateTime.now().toFormattedTime(),
-          ),
-          const SpaceHeight(40.0),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                child: Button.filled(
-                  onPressed: () {
-                    context.pushReplacement(const DashboardPage());
-                  },
-                  label: 'Selesai',
-                  fontSize: 13,
-                ),
-              ),
-              const SpaceWidth(10.0),
-              Flexible(
-                child: Button.outlined(
-                  onPressed: () async {
-                  },
-                  label: 'Print',
-                  icon: Assets.icons.print.svg(),
-                  fontSize: 13,
-                ),
-              ),
-            ],
-          ),
-        ],
+      content: BlocBuilder<OrderBloc, OrderState>(
+        builder: (context, state) {
+          return state.maybeWhen(
+            orElse: () {
+              return const SizedBox.shrink();
+            },
+            success: (data, qty, total, paymentMethod, nominalBayar, idKasir,
+                namaKasir) {
+              context.read<CheckoutBloc>().add(const CheckoutEvent.started());
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SpaceHeight(12.0),
+                  const _LabelValue(
+                    label: 'METODE PEMBAYARAN',
+                    value: 'Tunai',
+                  ),
+                  const Divider(height: 36.0),
+                  _LabelValue(
+                    label: 'TOTAL PEMBELIAN',
+                    value: total.currencyFormatRp,
+                  ),
+                  const Divider(height: 36.0),
+                  _LabelValue(
+                    label: 'NOMINAL BAYAR',
+                    value: nominalBayar.currencyFormatRp,
+                  ),
+                  const Divider(height: 36.0),
+                  _LabelValue(
+                    label: 'WAKTU PEMBAYARAN',
+                    value: DateTime.now().toFormattedTime(),
+                  ),
+                  const SpaceHeight(40.0),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Button.filled(
+                          onPressed: () {
+                            context.pushReplacement(const DashboardPage());
+                          },
+                          label: 'Selesai',
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SpaceWidth(10.0),
+                      Flexible(
+                        child: Button.outlined(
+                          onPressed: () async {},
+                          label: 'Print',
+                          icon: Assets.icons.print.svg(),
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
+          );
+        },
       ),
     );
   }

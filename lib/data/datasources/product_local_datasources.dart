@@ -1,4 +1,6 @@
 import 'package:fic11_starter_pos/data/model/response/product_response_model.dart';
+import 'package:fic11_starter_pos/presentation/home/models/order_item.dart';
+import 'package:fic11_starter_pos/presentation/order/models/order_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ProductLocalDatasources {
@@ -35,6 +37,58 @@ class ProductLocalDatasources {
         is_sync INTEGER DEFAULT 0
       )
     ''');
+
+    await db.execute('''
+      CREATE TABLE orders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nominal INTEGER,
+        payment_method TEXT,
+        total_item INTEGER,
+        id_kasir INTEGER,
+        nama_kasir TEXT,
+        is_sync INTEGER DEFAULT 0
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE orders_items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id_order INTEGER,
+        id_product INTEGER,
+        quantity INTEGER,
+        price INTEGER
+      )
+    ''');
+  }
+
+  //save order
+  Future<int> saveOrder(OrderModel order) async {
+    final db = await instance.database;
+    int id = await db.insert('orders', order.toMapForLocal());
+    for (var orderItem in order.orders) {
+      await db.insert('orders_items', orderItem.toMapForLocal(id));
+    }
+    return id;
+  }
+
+  //get order by isSync = 0
+  Future<List<OrderModel>> getOrdersByIsSync() async {
+    final db = await instance.database;
+    final result = await db.query('orders', where: 'is_sync = 0');
+    return result.map((e) => OrderModel.fromLocalMap(e)).toList();
+  }
+
+  //get order item By id order
+  Future<List<OrderItem>> getOrderItemByOrderId(int idOrder) async {
+    final db = await instance.database;
+    final result = await db.query('orders_items', where: 'id_order = $idOrder');
+    return result.map((e) => OrderItem.fromMap(e)).toList();
+  }
+
+  //update isSync
+  Future<int> updateIsSyncOrderById(int id) async {
+    final db = await instance.database;
+    return await db.update('orders', {'is_sync': 1}, where: 'id = $id');
   }
 
   Future<Database> get database async {

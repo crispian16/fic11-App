@@ -1,14 +1,14 @@
 import 'package:fic11_starter_pos/presentation/home/bloc/checkout/checkout_bloc.dart';
+import 'package:fic11_starter_pos/presentation/home/models/order_item.dart';
+import 'package:fic11_starter_pos/presentation/order/bloc/bloc/order_bloc.dart';
+import 'package:fic11_starter_pos/presentation/order/widgets/payment_cash_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/menu_button.dart';
 import '../../../core/components/spaces.dart';
-import '../models/order_model.dart';
 import '../widgets/order_card.dart';
-import '../widgets/payment_cash_dialog.dart';
-import '../widgets/payment_qris_dialog.dart';
 import '../widgets/process_button.dart';
 
 class OrdersPage extends StatelessWidget {
@@ -18,25 +18,13 @@ class OrdersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final indexValue = ValueNotifier(0);
     const paddingHorizontal = EdgeInsets.symmetric(horizontal: 16.0);
-    final List<OrderModel> orders = [
-      OrderModel(
-        image: Assets.images.f1.path,
-        name: 'Nutty Oat Latte',
-        price: 39000,
-      ),
-      OrderModel(
-        image: Assets.images.f2.path,
-        name: 'Iced Latte',
-        price: 24000,
-      ),
-    ];
-
-    int calculateTotalPrice(List<OrderModel> orders) {
-      int totalPrice = 0;
-      for (final order in orders) {
-        totalPrice += order.price;
-      }
-      return totalPrice;
+    List<OrderItem> orders = [];
+    int totalPrice = 0;
+    int calculateTotalPrice(List<OrderItem> orders) {
+      return orders.fold(
+          0,
+          (previousValue, element) =>
+              previousValue + element.product.price * element.quantity);
     }
 
     return Scaffold(
@@ -62,6 +50,7 @@ class OrdersPage extends StatelessWidget {
                 child: Text('No Orders Found'),
               );
             }
+            totalPrice = total;
             return ListView.separated(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               itemCount: data.length,
@@ -71,7 +60,6 @@ class OrdersPage extends StatelessWidget {
                 data: data[index],
                 onDeleteTap: () {
                   orders.removeAt(index);
-                  // setState(() {});
                 },
               ),
             );
@@ -92,7 +80,12 @@ class OrdersPage extends StatelessWidget {
                     iconPath: Assets.icons.cash.path,
                     label: 'Tunai',
                     isActive: value == 1,
-                    onPressed: () => indexValue.value = 1,
+                    onPressed: () {
+                      indexValue.value = 1;
+                      context
+                          .read<OrderBloc>()
+                          .add(OrderEvent.addPaymentMethod('Tunai', orders));
+                    },
                   ),
                   const SpaceWidth(10.0),
                   MenuButton(
@@ -111,12 +104,12 @@ class OrdersPage extends StatelessWidget {
               onPressed: () async {
                 if (indexValue.value == 0) {
                 } else if (indexValue.value == 1) {
-                  // showDialog(
-                  //   context: context,
-                  //   builder: (context) => PaymentCashDialog(
-                  //     price: calculateTotalPrice(orders),
-                  //   ),
-                  // );
+                  showDialog(
+                    context: context,
+                    builder: (context) => PaymentCashDialog(
+                      price: totalPrice,
+                    ),
+                  );
                 } else if (indexValue.value == 2) {
                   // showDialog(
                   //   context: context,

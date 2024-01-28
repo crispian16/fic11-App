@@ -8,6 +8,7 @@ import 'package:fic11_starter_pos/presentation/home/bloc/checkout/checkout_bloc.
 import 'package:fic11_starter_pos/presentation/home/bloc/logout/logout_bloc.dart';
 import 'package:fic11_starter_pos/presentation/home/bloc/product/product_bloc.dart';
 import 'package:fic11_starter_pos/presentation/home/pages/dashboard_page.dart';
+import 'package:fic11_starter_pos/presentation/order/bloc/bloc/order_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
           create: (context) => ProductBloc(ProductRemoteDatasource())..add(const ProductEvent.fetchLocal() ),
         ),
         BlocProvider(create: (context) => CheckoutBloc()),
+        BlocProvider(create: (context) => OrderBloc()),
       ],
       child: MaterialApp(
         title: 'Flutter FIC Batch 11',

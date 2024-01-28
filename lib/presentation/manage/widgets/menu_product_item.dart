@@ -4,7 +4,6 @@ import 'package:fic11_starter_pos/core/components/spaces.dart';
 import 'package:fic11_starter_pos/core/constants/colors.dart';
 import 'package:fic11_starter_pos/core/constants/variables.dart';
 import 'package:fic11_starter_pos/data/model/response/product_response_model.dart';
-import 'package:fic11_starter_pos/presentation/home/models/product_model.dart';
 import 'package:flutter/material.dart';
 
 class MenuProductItem extends StatelessWidget {

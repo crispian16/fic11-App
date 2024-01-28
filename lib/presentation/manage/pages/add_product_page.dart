@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:fic11_starter_pos/core/components/buttons.dart';
 import 'package:fic11_starter_pos/core/components/custom_dropdown.dart';
 import 'package:fic11_starter_pos/core/components/custom_text_field.dart';

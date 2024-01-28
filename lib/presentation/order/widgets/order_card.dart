@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fic11_starter_pos/core/constants/variables.dart';
 import 'package:fic11_starter_pos/core/extensions/int_ext.dart';
+import 'package:fic11_starter_pos/presentation/home/bloc/checkout/checkout_bloc.dart';
 import 'package:fic11_starter_pos/presentation/home/models/order_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/components/spaces.dart';
 import '../../../core/constants/colors.dart';
@@ -81,8 +83,10 @@ class OrderCard extends StatelessWidget {
                           GestureDetector(
                             onTap: () {
                               if (data.quantity > 1) {
-                                data.quantity--;
-                                setState(() {});
+                                context.read<CheckoutBloc>().add(
+                                    CheckoutEvent.removeCheckout(data.product));
+                                // data.quantity--;
+                                // setState(() {});
                               }
                             },
                             child: Container(
@@ -101,8 +105,11 @@ class OrderCard extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
-                              data.quantity++;
-                              setState(() {});
+                              context
+                                  .read<CheckoutBloc>()
+                                  .add(CheckoutEvent.addCheckout(data.product));
+                              // data.quantity++;
+                              // setState(() {});
                             },
                             child: Container(
                               color: AppColors.white,
