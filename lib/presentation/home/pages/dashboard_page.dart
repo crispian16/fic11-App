@@ -3,6 +3,7 @@ import 'package:fic11_starter_pos/core/constants/colors.dart';
 import 'package:fic11_starter_pos/presentation/home/pages/home_page.dart';
 import 'package:fic11_starter_pos/presentation/home/widgets/nav_item.dart';
 import 'package:fic11_starter_pos/presentation/manage/pages/manage_menu_page.dart';
+import 'package:fic11_starter_pos/presentation/order/pages/orders_page.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -17,14 +18,11 @@ class _DashboardPageState extends State<DashboardPage> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    const Center(
-      child: Text('Order Page'),
-    ),
+    const OrdersPage(),
     const Center(
       child: Text('History Page'),
     ),
     const ManageMenuPage(),
-    // const OrdersPage(),
     // const Placeholder(),
   ];
 

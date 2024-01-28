@@ -1,4 +1,6 @@
+import 'package:fic11_starter_pos/presentation/home/bloc/checkout/checkout_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/menu_button.dart';
@@ -48,20 +50,33 @@ class OrdersPage extends StatelessWidget {
           ),
         ],
       ),
-      body: StatefulBuilder(
-        builder: (context, setState) => ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          itemCount: orders.length,
-          separatorBuilder: (context, index) => const SpaceHeight(20.0),
-          itemBuilder: (context, index) => OrderCard(
-            padding: paddingHorizontal,
-            data: orders[index],
-            onDeleteTap: () {
-              orders.removeAt(index);
-              setState(() {});
-            },
-          ),
-        ),
+      body: BlocBuilder<CheckoutBloc, CheckoutState>(
+        builder: (context, state) {
+          return state.maybeWhen(orElse: () {
+            return const Center(
+              child: Text('No Orders Found'),
+            );
+          }, success: (data, qty, total) {
+            if (data.isEmpty) {
+              return const Center(
+                child: Text('No Orders Found'),
+              );
+            }
+            return ListView.separated(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              itemCount: data.length,
+              separatorBuilder: (context, index) => const SpaceHeight(20.0),
+              itemBuilder: (context, index) => OrderCard(
+                padding: paddingHorizontal,
+                data: data[index],
+                onDeleteTap: () {
+                  orders.removeAt(index);
+                  // setState(() {});
+                },
+              ),
+            );
+          });
+        },
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -96,18 +111,18 @@ class OrdersPage extends StatelessWidget {
               onPressed: () async {
                 if (indexValue.value == 0) {
                 } else if (indexValue.value == 1) {
-                  showDialog(
-                    context: context,
-                    builder: (context) => PaymentCashDialog(
-                      price: calculateTotalPrice(orders),
-                    ),
-                  );
+                  // showDialog(
+                  //   context: context,
+                  //   builder: (context) => PaymentCashDialog(
+                  //     price: calculateTotalPrice(orders),
+                  //   ),
+                  // );
                 } else if (indexValue.value == 2) {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) => const PaymentQrisDialog(),
-                  );
+                  // showDialog(
+                  //   context: context,
+                  //   barrierDismissible: false,
+                  //   builder: (context) => const PaymentQrisDialog(),
+                  // );
                 }
               },
             ),

@@ -2,8 +2,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:fic11_starter_pos/data/datasources/product_local_datasources.dart';
 import 'package:fic11_starter_pos/data/datasources/product_remote_datasource.dart';
+import 'package:fic11_starter_pos/data/model/request/product_request_model.dart';
 import 'package:fic11_starter_pos/data/model/response/product_response_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:http/http.dart';
+import 'package:image_picker/image_picker.dart';
 
 part 'product_event.dart';
 part 'product_state.dart';
@@ -44,6 +47,28 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
               .toList();
 
       emit(ProductState.success(newProducts));
+    });
+
+    on<_AddProduct>((event, emit) async {
+      emit(const ProductState.loading());
+      final requestData = ProductRequestModel(
+        name: event.product.name,
+        price: event.product.price,
+        stock: event.product.stock,
+        category: event.product.category,
+        isBestSeller: event.product.isBestSeller ? 1 : 0,
+        image: event.image,
+      );
+      final response = await _productRemoteDatasource.addProduct(requestData);
+      // products.add(newProduct);
+      response.fold(
+        (l) => emit(ProductState.error(l)),
+        (r) {
+          products.add(r.data);
+          emit(ProductState.success(products));
+        },
+      );
+      emit(ProductState.success(products));
     });
   }
 }

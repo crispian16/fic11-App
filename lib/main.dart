@@ -4,6 +4,7 @@ import 'package:fic11_starter_pos/data/datasources/auth_remote_datasource.dart';
 import 'package:fic11_starter_pos/data/datasources/product_remote_datasource.dart';
 import 'package:fic11_starter_pos/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:fic11_starter_pos/presentation/auth/pages/login_page.dart';
+import 'package:fic11_starter_pos/presentation/home/bloc/checkout/checkout_bloc.dart';
 import 'package:fic11_starter_pos/presentation/home/bloc/logout/logout_bloc.dart';
 import 'package:fic11_starter_pos/presentation/home/bloc/product/product_bloc.dart';
 import 'package:fic11_starter_pos/presentation/home/pages/dashboard_page.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ProductBloc(ProductRemoteDatasource())..add(const ProductEvent.fetchLocal() ),
         ),
+        BlocProvider(create: (context) => CheckoutBloc()),
       ],
       child: MaterialApp(
         title: 'Flutter FIC Batch 11',

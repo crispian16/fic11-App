@@ -1,11 +1,10 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:fic11_starter_pos/core/extensions/build_context_ext.dart';
 import 'package:fic11_starter_pos/data/datasources/auth_local_datasource.dart';
 import 'package:fic11_starter_pos/data/datasources/product_local_datasources.dart';
 import 'package:fic11_starter_pos/presentation/auth/pages/login_page.dart';
 import 'package:fic11_starter_pos/presentation/home/bloc/logout/logout_bloc.dart';
 import 'package:fic11_starter_pos/presentation/home/bloc/product/product_bloc.dart';
+import 'package:fic11_starter_pos/presentation/manage/pages/manage_product_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,7 +37,7 @@ class ManageMenuPage extends StatelessWidget {
                 MenuButton(
                   iconPath: Assets.images.manageProduct.path,
                   label: 'Kelola Produk',
-                  onPressed: () {},
+                  onPressed: () => context.push(const ManageProductPage()),
                   isImage: true,
                 ),
                 const SpaceWidth(15.0),

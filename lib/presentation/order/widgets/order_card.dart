@@ -1,12 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fic11_starter_pos/core/constants/variables.dart';
+import 'package:fic11_starter_pos/core/extensions/int_ext.dart';
+import 'package:fic11_starter_pos/presentation/home/models/order_item.dart';
 import 'package:flutter/material.dart';
-
 
 import '../../../core/components/spaces.dart';
 import '../../../core/constants/colors.dart';
-import '../models/order_model.dart';
 
 class OrderCard extends StatelessWidget {
-  final OrderModel data;
+  final OrderItem data;
   final VoidCallback onDeleteTap;
   final EdgeInsetsGeometry? padding;
 
@@ -36,11 +38,15 @@ class OrderCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-                child: Image.asset(
-                  data.image,
+                child: CachedNetworkImage(
+                  imageUrl: '${Variables.imageUrl}${data.product.image}',
                   width: 76,
                   height: 76,
                   fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.food_bank_outlined,
+                    size: 70,
+                  ),
                 ),
               ),
               const SpaceWidth(24.0),
@@ -51,14 +57,17 @@ class OrderCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          data.name,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w700,
+                        Expanded(
+                          child: Text(
+                            data.product.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                         Text(
-                          data.priceFormat,
+                          data.product.price.currencyFormatRp,
                           style: const TextStyle(
                             fontWeight: FontWeight.w700,
                           ),

@@ -30,7 +30,9 @@ class ProductLocalDatasources {
         price INTEGER,
         stock INTEGER,
         category TEXT,
-        image TEXT
+        image TEXT,
+        is_best_seller INTEGER,
+        is_sync INTEGER DEFAULT 0
       )
     ''');
   }
@@ -52,6 +54,13 @@ class ProductLocalDatasources {
     for (var product in products) {
       await db.insert(tableProducts, product.toMap());
     }
+  }
+
+  //insert product
+  Future<Product> insertProduct(Product product) async {
+    final db = await instance.database;
+    int id = await db.insert(tableProducts, product.toMap());
+    return product.copyWith(id: id);
   }
 
   Future<List<Product>> getAllProducts() async {
