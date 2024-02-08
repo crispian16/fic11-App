@@ -14,8 +14,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         event.orders,
         event.orders.fold(
             0, (previousValue, element) => previousValue + element.quantity),
-        event.orders.fold(0,
-            (previousValue, element) => previousValue + element.product.price),
+        event.orders.fold(
+            0,
+            (previousValue, element) =>
+                previousValue + (element.quantity * element.product.price)),
         event.paymentMethod,
         0,
         0,
@@ -26,7 +28,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<_AddNominalBayar>((event, emit) {
       var currentState = state as _Success;
       emit(const _Loading());
-      
+
       emit(_Success(
         currentState.products,
         currentState.totalQuantity,
@@ -35,7 +37,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         event.nominal,
         currentState.idKasir,
         currentState.namaKasir,
-        
       ));
     });
   }

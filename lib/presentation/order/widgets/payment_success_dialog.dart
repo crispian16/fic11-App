@@ -1,18 +1,22 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:fic11_starter_pos/core/extensions/build_context_ext.dart';
 import 'package:fic11_starter_pos/core/extensions/date_time_ext.dart';
 import 'package:fic11_starter_pos/core/extensions/int_ext.dart';
 import 'package:fic11_starter_pos/presentation/home/bloc/checkout/checkout_bloc.dart';
 import 'package:fic11_starter_pos/presentation/home/pages/dashboard_page.dart';
-import 'package:fic11_starter_pos/presentation/order/bloc/bloc/order_bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fic11_starter_pos/presentation/order/bloc/order/order_bloc.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/buttons.dart';
 import '../../../core/components/spaces.dart';
 
 class PaymentSuccessDialog extends StatelessWidget {
-  const PaymentSuccessDialog({super.key});
+  const PaymentSuccessDialog({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +50,9 @@ class PaymentSuccessDialog extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SpaceHeight(12.0),
-                  const _LabelValue(
+                  _LabelValue(
                     label: 'METODE PEMBAYARAN',
-                    value: 'Tunai',
+                    value: paymentMethod,
                   ),
                   const Divider(height: 36.0),
                   _LabelValue(
@@ -58,7 +62,7 @@ class PaymentSuccessDialog extends StatelessWidget {
                   const Divider(height: 36.0),
                   _LabelValue(
                     label: 'NOMINAL BAYAR',
-                    value: nominalBayar.currencyFormatRp,
+                    value: paymentMethod=='QRIS' ? total.currencyFormatRp : nominalBayar.currencyFormatRp,
                   ),
                   const Divider(height: 36.0),
                   _LabelValue(

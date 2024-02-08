@@ -2,7 +2,7 @@ import 'package:fic11_starter_pos/core/extensions/build_context_ext.dart';
 import 'package:fic11_starter_pos/core/extensions/int_ext.dart';
 import 'package:fic11_starter_pos/core/extensions/string_ext.dart';
 import 'package:fic11_starter_pos/data/datasources/product_local_datasources.dart';
-import 'package:fic11_starter_pos/presentation/order/bloc/bloc/order_bloc.dart';
+import 'package:fic11_starter_pos/presentation/order/bloc/order/order_bloc.dart';
 import 'package:fic11_starter_pos/presentation/order/models/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

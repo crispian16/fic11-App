@@ -5,7 +5,6 @@ import 'package:fic11_starter_pos/data/datasources/product_remote_datasource.dar
 import 'package:fic11_starter_pos/data/model/request/product_request_model.dart';
 import 'package:fic11_starter_pos/data/model/response/product_response_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 
 part 'product_event.dart';

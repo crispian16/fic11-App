@@ -1,7 +1,8 @@
 import 'package:fic11_starter_pos/presentation/home/bloc/checkout/checkout_bloc.dart';
 import 'package:fic11_starter_pos/presentation/home/models/order_item.dart';
-import 'package:fic11_starter_pos/presentation/order/bloc/bloc/order_bloc.dart';
+import 'package:fic11_starter_pos/presentation/order/bloc/order/order_bloc.dart';
 import 'package:fic11_starter_pos/presentation/order/widgets/payment_cash_dialog.dart';
+import 'package:fic11_starter_pos/presentation/order/widgets/payment_qris_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -71,32 +72,44 @@ class OrdersPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ValueListenableBuilder(
-              valueListenable: indexValue,
-              builder: (context, value, _) => Row(
-                children: [
-                  const SpaceWidth(10.0),
-                  MenuButton(
-                    iconPath: Assets.icons.cash.path,
-                    label: 'Tunai',
-                    isActive: value == 1,
-                    onPressed: () {
-                      indexValue.value = 1;
-                      context
-                          .read<OrderBloc>()
-                          .add(OrderEvent.addPaymentMethod('Tunai', orders));
-                    },
-                  ),
-                  const SpaceWidth(10.0),
-                  MenuButton(
-                    iconPath: Assets.icons.qrCode.path,
-                    label: 'QRIS',
-                    isActive: value == 2,
-                    onPressed: () => indexValue.value = 2,
-                  ),
-                  const SpaceWidth(10.0),
-                ],
-              ),
+            BlocBuilder<CheckoutBloc, CheckoutState>(
+              builder: (context, state) {
+                return state.maybeWhen(orElse: () {
+                  return const SizedBox.shrink();
+                }, success: (data, qty, total) {
+                  return ValueListenableBuilder(
+                    valueListenable: indexValue,
+                    builder: (context, value, _) => Row(
+                      children: [
+                        const SpaceWidth(10.0),
+                        MenuButton(
+                          iconPath: Assets.icons.cash.path,
+                          label: 'Tunai',
+                          isActive: value == 1,
+                          onPressed: () {
+                            indexValue.value = 1;
+                            context.read<OrderBloc>().add(
+                                OrderEvent.addPaymentMethod('Tunai', data));
+                          },
+                        ),
+                        const SpaceWidth(10.0),
+                        MenuButton(
+                          iconPath: Assets.icons.qrCode.path,
+                          label: 'QRIS',
+                          isActive: value == 2,
+                          onPressed: () {
+                            indexValue.value = 2;
+                            context
+                                .read<OrderBloc>()
+                                .add(OrderEvent.addPaymentMethod('QRIS', data));
+                          },
+                        ),
+                        const SpaceWidth(10.0),
+                      ],
+                    ),
+                  );
+                });
+              },
             ),
             const SpaceHeight(20.0),
             ProcessButton(
@@ -111,11 +124,13 @@ class OrdersPage extends StatelessWidget {
                     ),
                   );
                 } else if (indexValue.value == 2) {
-                  // showDialog(
-                  //   context: context,
-                  //   barrierDismissible: false,
-                  //   builder: (context) => const PaymentQrisDialog(),
-                  // );
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => PaymentQrisDialog(
+                      price: totalPrice,
+                    ),
+                  );
                 }
               },
             ),
